@@ -65,7 +65,7 @@ class YoloV7:
 
 class Yolov7Publisher:
     def __init__(self, img_topic: str, weights: str, conf_thresh: float = 0.5,
-                 iou_thresh: float = 0.45, pub_topic: str = "yolov6_detections",
+                 iou_thresh: float = 0.45, pub_topic: str = "yolov7_detections",
                  device: str = "cuda",
                  img_size: Union[Tuple[int, int], None] = (640, 640),
                  queue_size: int = 1, visualize: bool = False):
@@ -75,7 +75,7 @@ class Yolov7Publisher:
         :param conf_thresh: confidence threshold
         :param iou_thresh: intersection over union threshold
         :param pub_topic: name of the output topic (will be published under the
-            namespace '/yolov6')
+            namespace '/yolov7')
         :param device: device to do inference on (e.g., 'cuda' or 'cpu')
         :param queue_size: queue size for publishers
         :visualize: flag to enable publishing the detections visualized in the image
@@ -128,7 +128,7 @@ class Yolov7Publisher:
         # w_scaled = w_orig - (w_orig % 8)
         np_img_resized = cv2.resize(np_img_orig, (w_scaled, h_scaled))
 
-        # conversion to torch tensor (copied from original yolov6 repo)
+        # conversion to torch tensor (copied from original yolov7 repo)
         img = np_img_resized.transpose((2, 0, 1))[::-1]  # HWC to CHW, BGR to RGB
         img = torch.from_numpy(np.ascontiguousarray(img))
         img = img.float()  # uint8 to fp16/32
@@ -157,7 +157,7 @@ class Yolov7Publisher:
 
 
 if __name__ == "__main__":
-    rospy.init_node("yolov6_node")
+    rospy.init_node("yolov7_node")
 
     ns = rospy.get_name() + "/"
 

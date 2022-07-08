@@ -1,8 +1,8 @@
-# ROS package for YOLOv6
+# ROS package for official YOLOv7
 
-This repo contains a ROS noetic package for YOLOv7. It wraps the [official 
-implementation](https://github.com/WongKinYiu/yolov7) into a ROS node (so most credit 
-goes to the YOLOv6 creators).
+This repo contains a ROS noetic package for the official YOLOv7. It wraps the 
+[official implementation](https://github.com/WongKinYiu/yolov7) into a ROS node (so most credit 
+goes to the YOLOv7 creators).
 
 ### Note
 There are currently two YOLOv7 variants out there. This repo contains the 
@@ -34,11 +34,11 @@ The package has been tested under Ubuntu 20.04 and Python 3.8.10.
 ## Usage
 Before you launch the node, adjust the parameters in the 
 [launch file](launch/yolov7.launch). For example, you need to set the path to your 
-YOLOv6 weights and the image topic to which this node should listen to. The launch 
+YOLOv7 weights and the image topic to which this node should listen to. The launch 
 file also contains a description for each parameter.
 
 ```
-roslaunch yolov6-ros yolov6.launch
+roslaunch yolov7-ros yolov7.launch
 ```
 
 Each time a new image is received it is then fed into YOLOv7.
@@ -47,7 +47,8 @@ Each time a new image is received it is then fed into YOLOv7.
 - The detections are published using the [vision_msgs/Detection2DArray](http://docs.ros.org/en/api/vision_msgs/html/msg/Detection2DArray.html) message type.
 - The detections will be published under `/yolov7/out_topic`.
 - If you set the `visualize` parameter to `true`, the detections will be drawn into 
-  the image, which is then published under `/yolov6/out_topic/visualization`.
+  the image, which is then published under `/yolov7/out_topic/visualization`.
 
 ## Coming Soon
+- ROS2 implementation
 - Additional weights for automotive datasets
