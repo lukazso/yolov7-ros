@@ -85,7 +85,6 @@ class Yolov7Publisher:
         """
         self.img_size = img_size
         self.device = device
-        rospy.loginfo(device)
 
         vis_topic = pub_topic + "visualization" if pub_topic.endswith("/") else \
             pub_topic + "/visualization"
@@ -137,7 +136,6 @@ class Yolov7Publisher:
 
         # inference & rescaling the output to original img size
         detections = self.model.inference(img)
-        print(detections)
         detections[:, :4] = rescale(
             [h_scaled, w_scaled], detections[:, :4], [h_orig, w_orig])
         detections[:, :4] = detections[:, :4].round()
