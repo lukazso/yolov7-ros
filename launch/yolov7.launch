@@ -2,15 +2,15 @@
     <node pkg="yolov7-ros" type="detect_ros.py" name="detect" output="screen"
     ns="yolov7">
         <!-- Download the official weights from the original repo -->
-        <param name="weights_path" type="str" value="" />
+        <param name="weights_path" type="str" value="$(find yolov7-ros)/weights/yolov7x.pt" />
         <!-- topic name to subscribe to -->
-        <param name="img_topic" type="str" value="/raw_image" />
+        <param name="img_topic" type="str" value="/camera/color/image_raw" />
         <!-- topic name for the detection output -->
         <param name="out_topic" type="str" value="yolov7" />
         <!-- confidence threshold -->
-        <param name="conf_thresh" type="double" value="0.4" />
+        <param name="conf_thresh" type="double" value="0.5" />
         <!-- intersection over union threshold -->
-        <param name="iou_thresh" type="double" value="0.45" />
+        <param name="iou_thresh" type="double" value="0.6" />
         <!-- queue size for publishing -->
         <param name="queue_size" type="int" value="1" />
         <!-- image size to which to resize each input image before feeding into the
