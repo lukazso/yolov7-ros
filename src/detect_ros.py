@@ -6,6 +6,7 @@ from utils.ros import create_detection_msg
 from visualizer import draw_detections
 
 import os
+from utils.ros import load_yaml
 from typing import Tuple, Union
 
 import torch
@@ -68,6 +69,7 @@ class Yolov7Publisher:
     def __init__(self, img_topic: str, weights: str, conf_thresh: float = 0.5,
                  iou_thresh: float = 0.45, pub_topic: str = "yolov7_detections",
                  device: str = "cuda",
+                 yaml: str = "conf/coco.yaml", 
                  img_size: Union[Tuple[int, int], None] = (640, 640),
                  queue_size: int = 1, visualize: bool = False):
         """
@@ -85,6 +87,7 @@ class Yolov7Publisher:
             the original img size.
         """
         self.img_size = img_size
+        self.class_names = load_yaml(yaml)['names']
         self.device = device
 
         vis_topic = pub_topic + "visualization" if pub_topic.endswith("/") else \
@@ -129,11 +132,14 @@ class Yolov7Publisher:
         np_img_resized = cv2.resize(np_img_orig, (w_scaled, h_scaled))
 
         # conversion to torch tensor (copied from original yolov7 repo)
+        if np_img_resized.shape[2] == 4: #Removing extra channel if RGBA
+            np_img_resized = np_img_resized[:,:,:3]
         img = np_img_resized.transpose((2, 0, 1))[::-1]  # HWC to CHW, BGR to RGB
         img = torch.from_numpy(np.ascontiguousarray(img))
         img = img.float()  # uint8 to fp16/32
         img /= 255  # 0 - 255 to 0.0 - 1.
         img = img.to(self.device)
+        
 
         # inference & rescaling the output to original img size
         detections = self.model.inference(img)
@@ -149,8 +155,9 @@ class Yolov7Publisher:
         if self.visualization_publisher:
             bboxes = [[int(x1), int(y1), int(x2), int(y2)]
                       for x1, y1, x2, y2 in detections[:, :4].tolist()]
+            prediction_scores = [float(p) for p in detections[:, 4].tolist()]
             classes = [int(c) for c in detections[:, 5].tolist()]
-            vis_img = draw_detections(np_img_orig, bboxes, classes)
+            vis_img = draw_detections(np_img_orig, bboxes, classes, prediction_scores, self.class_names)
             vis_msg = self.bridge.cv2_to_imgmsg(vis_img)
             self.visualization_publisher.publish(vis_msg)
 
@@ -169,6 +176,7 @@ if __name__ == "__main__":
     img_size = rospy.get_param(ns + "img_size")
     visualize = rospy.get_param(ns + "visualize")
     device = rospy.get_param(ns + "device")
+    yaml = rospy.get_param(ns + "yaml")
 
     # some sanity checks
     if not os.path.isfile(weights_path):
@@ -186,6 +194,7 @@ if __name__ == "__main__":
         conf_thresh=conf_thresh,
         iou_thresh=iou_thresh,
         img_size=(img_size, img_size),
+        yaml=yaml,
         queue_size=queue_size
     )
 

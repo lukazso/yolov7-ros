@@ -16,17 +16,22 @@ def gsutil_getsize(url=''):
     return eval(s.split(' ')[0]) if len(s) else 0  # bytes
 
 
-def attempt_download(file, repo='WongKinYiu/yolov6'):
+def attempt_download(file, repo='WongKinYiu/yolov7'):
     # Attempt file download if does not exist
     file = Path(str(file).strip().replace("'", '').lower())
 
     if not file.exists():
         try:
-            response = requests.get(f'https://api.github.com/repos/{repo}/releases/weights').json()  # github api
-            assets = [x['name'] for x in response['assets']]  # release assets
-            tag = response['tag_name']  # i.e. 'v1.0'
+            response = requests.get(f'https://api.github.com/repos/{repo}/releases').json()  # github api
+            for x in response:
+                for key, value in x.items():
+                    #print("Key: ", key)
+                    if key == "assets":
+                        assets = [n['name'] for n in x['assets']]  # release assets
+                    if key == "tag_name":
+                        tag = x['tag_name']  # i.e. 'v1.0'
         except:  # fallback plan
-            assets = ['yolov6.pt']
+            assets = ['yolov7.pt']
             tag = subprocess.check_output('git tag', shell=True).decode().split()[-1]
 
         name = file.name

@@ -5,13 +5,22 @@ from sensor_msgs.msg import Image
 from vision_msgs.msg import Detection2DArray, Detection2D, BoundingBox2D, \
     ObjectHypothesisWithPose
 from geometry_msgs.msg import Pose2D
-
+import yaml
 
 def create_header():
     h = Header()
     h.stamp = rospy.Time.now()
     return h
 
+def load_yaml(file_path):
+    """Load data from yaml file."""
+    print(file_path)
+    if isinstance(file_path, str):
+        with open(file_path, errors='ignore') as f:
+            data_dict = yaml.safe_load(f)
+    else:
+        data_dict = None
+    return data_dict
 
 def create_detection_msg(img_msg: Image, detections: torch.Tensor) -> Detection2DArray:
     """

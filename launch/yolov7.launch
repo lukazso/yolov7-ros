@@ -1,10 +1,9 @@
 <launch>
-    <node pkg="yolov7-ros" type="detect_ros.py" name="detect" output="screen"
-    ns="yolov7">
+    <node pkg="yolov7-ros" type="detect_ros.py" name="detect" output="screen"  ns="yolov7">
         <!-- Download the official weights from the original repo -->
         <param name="weights_path" type="str" value="$(find yolov7-ros)/weights/yolov7x.pt" />
         <!-- topic name to subscribe to -->
-        <param name="img_topic" type="str" value="/camera/color/image_raw" />
+        <param name="img_topic" type="str" value="/zed2i/zed_node/rgb/image_rect_gray" />
         <!-- topic name for the detection output -->
         <param name="out_topic" type="str" value="yolov7" />
         <!-- confidence threshold -->
@@ -20,5 +19,7 @@
         <param name="visualize" type="bool" value="true" />
         <!-- 'cuda' or 'cpu' -->
         <param name="device" type="str" value="cuda" />
+        <!-- for now only coco names -->
+        <param name="yaml" type="str" value="$(find yolov7-ros)/conf/coco.yaml" />
     </node>
 </launch>
