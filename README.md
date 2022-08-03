@@ -18,7 +18,7 @@ First, clone the repo into your catkin workspace and build the package:
 ```
 git clone https://github.com/lukazso/yolov7-ros.git ~/catkin_ws/src/
 cd ~/catkin_ws
-catkin build yolov7-ros
+catkin build yolov7_ros
 ```
 
 The Python requirements are listed in the `requirements.txt`. You can simply 
@@ -38,7 +38,7 @@ YOLOv7 weights and the image topic to which this node should listen to. The laun
 file also contains a description for each parameter.
 
 ```
-roslaunch yolov7-ros yolov7.launch
+roslaunch yolov7_ros yolov7.launch
 ```
 
 Each time a new image is received it is then fed into YOLOv7.
