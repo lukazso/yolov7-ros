@@ -20,22 +20,20 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
 
-def rescale(ori_shape, boxes, target_shape):
-    '''Rescale the output to the original image shape
-    copied from https://github.com/meituan/YOLOv6/blob/main/yolov6/core/inferer.py
-    '''
-    ratio = min(ori_shape[0] / target_shape[0], ori_shape[1] / target_shape[1])
-    padding = (ori_shape[1] - target_shape[1] * ratio) / 2, (
-                ori_shape[0] - target_shape[0] * ratio) / 2
+def rescale(ori_shape: Tuple[int, int], boxes: Union[torch.Tensor, np.ndarray],
+            target_shape: Tuple[int, int]):
+    """Rescale the output to the original image shape
+    :param ori_shape: original width and height [width, height].
+    :param boxes: original bounding boxes as a torch.Tensor or np.array or shape
+        [num_boxes, >=4], where the first 4 entries of each element have to be
+        [x1, y1, x2, y2].
+    :param target_shape: target width and height [width, height].
+    """
+    xscale = target_shape[1] / ori_shape[1]
+    yscale = target_shape[0] / ori_shape[0]
 
-    boxes[:, [0, 2]] -= padding[0]
-    boxes[:, [1, 3]] -= padding[1]
-    boxes[:, :4] /= ratio
-
-    boxes[:, 0].clamp_(0, target_shape[1])  # x1
-    boxes[:, 1].clamp_(0, target_shape[0])  # y1
-    boxes[:, 2].clamp_(0, target_shape[1])  # x2
-    boxes[:, 3].clamp_(0, target_shape[0])  # y2
+    boxes[:, [0, 2]] *= xscale
+    boxes[:, [1, 3]] *= yscale
 
     return boxes
 
@@ -47,7 +45,6 @@ class YoloV7:
         self.iou_thresh = iou_thresh
         self.device = device
         self.model = attempt_load(weights, map_location=device)
-    
     @torch.no_grad()
     def inference(self, img: torch.Tensor):
         """
@@ -109,6 +106,7 @@ class Yolov7Publisher:
         self.detection_publisher = rospy.Publisher(
             pub_topic, Detection2DArray, queue_size=queue_size
         )
+        rospy.loginfo("YOLOv7 initialization complete. Ready to start inference")
 
     def process_img_msg(self, img_msg: Image):
         """ callback function for publisher """
