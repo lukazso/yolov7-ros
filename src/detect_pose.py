@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import numpy as np
-import matplotlib.pyplot as plt
 import torch, cv2, os, rospy
 from torchvision import transforms
 from utils.datasets import letterbox
@@ -15,6 +14,7 @@ def process_img_msg(image, args):
     device = args[1]
     visualize = args[2]
     queue_size = args[3]
+    out_topic = args[4]
     """ callback function for publisher """
     bridge = CvBridge()
     image = bridge.imgmsg_to_cv2(image, "bgr8")    
@@ -38,24 +38,26 @@ def process_img_msg(image, args):
     for idx in range(output.shape[0]):
         plot_skeleton_kpts(nimg, output[idx, 7:].T, 3)
 
-    pub_topic = "human_pose_estimation"
-    vis_topic = pub_topic + "visualization" if pub_topic.endswith("/") else \
-        pub_topic + "/visualization"
-    visualization_publisher = rospy.Publisher(
-        vis_topic, Image, queue_size=queue_size
-    ) if visualize else None
+    vis_topic = out_topic + "visualization" if out_topic.endswith("/") else out_topic + "/visualization"
+    visualization_publisher = rospy.Publisher(vis_topic, Image, queue_size=queue_size  ) if visualize else None
     vis_msg = bridge.cv2_to_imgmsg(nimg)
     visualization_publisher.publish(vis_msg)
 
 def main():
     rospy.init_node("yolov7_human_pose")
 
+    ns = rospy.get_name() + "/"
+
+    weights_path = rospy.get_param(ns + "weights_path")
+    img_topic = rospy.get_param(ns + "img_topic")
+    out_topic = rospy.get_param(ns + "out_topic")
+    queue_size = rospy.get_param(ns + "queue_size")
+    visualize = rospy.get_param(ns + "visualize")
+    #device = rospy.get_param(ns + "device")
+    print(img_topic)
     #PARAMS TBD
-    weights_path = os.getcwd()+'/src/yolov7-ros/weights/yolov7-w6-pose.pt'
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    img_topic = "zed2i/zed_node/rgb/image_rect_color"
-    visualize = True
-    queue_size = 1
+
     
     weigths = torch.load(weights_path, map_location=device)
     model = weigths['model']
@@ -63,9 +65,9 @@ def main():
     if torch.cuda.is_available():
         model.half().to(device)
     
-    callback_args = (model, device, visualize, queue_size)
+    callback_args = (model, device, visualize, queue_size, out_topic)
             
-    img_subscriber = rospy.Subscriber(img_topic, Image, process_img_msg, callback_args, queue_size)
+    rospy.Subscriber(img_topic, Image, process_img_msg, callback_args, queue_size)
     
     rospy.spin()
 
