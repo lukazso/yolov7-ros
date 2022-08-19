@@ -102,7 +102,7 @@ class Conv(nn.Module):
         super(Conv, self).__init__()
         self.conv = nn.Conv2d(c1, c2, k, s, autopad(k, p), groups=g, bias=False)
         self.bn = nn.BatchNorm2d(c2)
-        self.act = nn.LeakyReLU(0.1, inplace=True) if act is True else (act if isinstance(act, nn.Module) else nn.Identity())
+        self.act = nn.SiLU() if act is True else (act if isinstance(act, nn.Module) else nn.Identity())
 
     def forward(self, x):
         return self.act(self.bn(self.conv(x)))
@@ -236,7 +236,7 @@ class Res(nn.Module):
 class ResX(Res):
     # ResNet bottleneck
     def __init__(self, c1, c2, shortcut=True, g=32, e=0.5):  # ch_in, ch_out, shortcut, groups, expansion
-        super().__init__(c1, c2, shortcu, g, e)
+        super().__init__(c1, c2, shortcut, g, e)
         c_ = int(c2 * e)  # hidden channels
 
 
@@ -477,7 +477,7 @@ class RepConv(nn.Module):
 
         padding_11 = autopad(k, p) - k // 2
 
-        self.act = nn.LeakyReLU(0.1, inplace=True) if act is True else (act if isinstance(act, nn.Module) else nn.Identity())
+        self.act = nn.SiLU() if act is True else (act if isinstance(act, nn.Module) else nn.Identity())
 
         if deploy:
             self.rbr_reparam = nn.Conv2d(c1, c2, k, s, autopad(k, p), groups=g, bias=True)
