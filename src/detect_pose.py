@@ -10,21 +10,14 @@ from utils.plots import output_to_keypoint, plot_skeleton_kpts
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
-def main():
-    rospy.init_node("yolov7_human_pose")
-
-    weights_path =os.getcwd()+'/ros_ws/src/yolov7-ros/weights/yolov7-w6-pose.pt'
-    print(weights_path)
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    weigths = torch.load(weights_path, map_location=device)
-    model = weigths['model']
-    _ = model.float().eval()
+def process_img_msg(image, args):
+    model = args[0]
+    device = args[1]
+    visualize = args[2]
+    queue_size = args[3]
+    """ callback function for publisher """
     bridge = CvBridge()
-    if torch.cuda.is_available():
-        model.half().to(device)
-        
-    image_path =os.getcwd()+'/ros_ws/src/yolov7-ros/src/people.jpeg' 
-    image = cv2.imread(image_path)
+    image = bridge.imgmsg_to_cv2(image, "bgr8")    
     image = letterbox(image, 960, stride=64, auto=True)[0]
     image_ = image.copy()
     image = transforms.ToTensor()(image)
@@ -32,14 +25,13 @@ def main():
 
     if torch.cuda.is_available():
         image = image.half().to(device)   
-    output, _ = model(image)
+    with torch.no_grad():
+        output, _ = model(image)
         
     rospy.loginfo("YOLOv7 initialization complete. Ready to start inference")
 
-
     output = non_max_suppression_kpt(output, 0.25, 0.65, nc=model.yaml['nc'], nkpt=model.yaml['nkpt'], kpt_label=True)
-    with torch.no_grad():
-        output = output_to_keypoint(output)
+    output = output_to_keypoint(output)
     nimg = image[0].permute(1, 2, 0) * 255
     nimg = nimg.cpu().numpy().astype(np.uint8)
     nimg = cv2.cvtColor(nimg, cv2.COLOR_RGB2BGR)
@@ -55,6 +47,26 @@ def main():
     vis_msg = bridge.cv2_to_imgmsg(nimg)
     visualization_publisher.publish(vis_msg)
 
+def main():
+    rospy.init_node("yolov7_human_pose")
+
+    #PARAMS TBD
+    weights_path = os.getcwd()+'/src/yolov7-ros/weights/yolov7-w6-pose.pt'
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    img_topic = "zed2i/zed_node/rgb/image_rect_color"
+    visualize = True
+    queue_size = 1
+    
+    weigths = torch.load(weights_path, map_location=device)
+    model = weigths['model']
+    _ = model.float().eval()
+    if torch.cuda.is_available():
+        model.half().to(device)
+    
+    callback_args = (model, device, visualize, queue_size)
+            
+    img_subscriber = rospy.Subscriber(img_topic, Image, process_img_msg, callback_args, queue_size)
+    
     rospy.spin()
 
 
