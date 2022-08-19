@@ -16,9 +16,14 @@ Following ROS packages are required:
 - [vision_msgs](http://wiki.ros.org/vision_msgs)
 - [geometry_msgs](http://wiki.ros.org/geometry_msgs)
 
+Yo can install them with:
+```
+sudo apt-get install ros-noetic-vision-msgs
+sudo apt-get install ros-noetic-geometry-msgs
+```
 First, clone the repo into your catkin workspace and build the package:
 ```
-git clone https://github.com/lukazso/yolov7-ros.git ~/catkin_ws/src/
+git clone https://github.com/robertokcanale/yolov7-ros.git ~/catkin_ws/src/
 cd ~/catkin_ws
 catkin build yolov7_ros
 ```
