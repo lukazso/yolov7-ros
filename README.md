@@ -54,9 +54,11 @@ Before you launch the node, adjust the parameters in the
 [launch file](launch/yolov7_hpe.launch). For example, you need to set the path to your 
 YOLOv7 weights and the image topic to which this node should listen to. The launch 
 file also contains a description for each parameter.
+You can download the weights from the official repo or here:
+https://drive.google.com/file/d/1Khl44NDNp2bpQMWWN-hvfc258SGx_QtV/view?usp=sharing
 
 ```
-rosrun yolov7_ros detect_pose.py
+rosrlaunch yolov7_ros yolov7_hpe.launch
 ```
 
 Each time a new image is received it is then fed into YOLOv7.
