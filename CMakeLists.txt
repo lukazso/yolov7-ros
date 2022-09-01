@@ -37,7 +37,7 @@ add_message_files(
     Object.msg
     ObjectsStamped.msg
     Human.msg
-    HumanStamped.msg
+    HumansStamped.msg
     Skeleton2D.msg
   )
 

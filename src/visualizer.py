@@ -21,7 +21,6 @@ def draw_detections(img: np.array, bboxes: List[List[int]], classes: List[int], 
         x_text = int(x1)
         y_text = max(15, int(y1 - 10))
         img = cv2.putText(
-            #img, class_names[int(cls)] + " " + str(round(prd, 4)*100) + "%" , (x_text, y_text), cv2.FONT_HERSHEY_SIMPLEX,
             img, class_names[int(cls)] + " " + str(round(prd, 2)), (x_text, y_text), cv2.FONT_HERSHEY_SIMPLEX,
             0.5, color, 1, cv2.LINE_AA
         )

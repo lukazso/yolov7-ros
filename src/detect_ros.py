@@ -2,7 +2,7 @@
 
 from models.experimental import attempt_load
 from utils.general import non_max_suppression
-from utils.ros import create_detection_msg
+from utils.ros import create_detection_msg, create_stamped_detection_msg
 from visualizer import draw_detections
 
 import os
@@ -15,7 +15,7 @@ from torchvision.transforms import ToTensor
 import numpy as np
 import rospy
 
-from vision_msgs.msg import Detection2DArray, Detection2D, BoundingBox2D
+from yolov7_ros.msg import ObjectsStamped
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
@@ -104,7 +104,7 @@ class Yolov7Publisher:
             img_topic, Image, self.process_img_msg
         )
         self.detection_publisher = rospy.Publisher(
-            pub_topic, Detection2DArray, queue_size=queue_size
+            pub_topic, ObjectsStamped, queue_size=queue_size
         )
         rospy.loginfo("YOLOv7 initialization complete. Ready to start inference")
 
@@ -146,8 +146,10 @@ class Yolov7Publisher:
         detections[:, :4] = detections[:, :4].round()
 
         # publishing
-        detection_msg = create_detection_msg(img_msg, detections)
+        detection_msg = create_stamped_detection_msg(detections, self.class_names)
         self.detection_publisher.publish(detection_msg)
+
+        print(detection_msg)
 
         # visualizing if required
         if self.visualization_publisher:
