@@ -29,6 +29,8 @@ pip install -r requirements.txt
 
 Download the YOLOv7 weights from the [official repository](https://github.com/WongKinYiu/yolov7).
 
+**Berkeley DeepDrive weights:** I trained YoloV7 with a basic hyperparameter set (no special hyperparameter optimization) on the [Berkeley DeepDrive dataset](https://bdd-data.berkeley.edu/). You can download the weights [here](https://drive.google.com/drive/folders/1OfC1dQx2db0dmmQA15_WScUptbYcfsZ8?usp=sharing).
+
 The package has been tested under Ubuntu 20.04 and Python 3.8.10.
 
 ## Usage
@@ -51,4 +53,3 @@ Each time a new image is received it is then fed into YOLOv7.
 
 ## Coming Soon
 - ROS2 implementation
-- Additional weights for automotive datasets
