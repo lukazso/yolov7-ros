@@ -1,14 +1,17 @@
 <launch>
-    <node pkg="yolov7-ros" type="detect_ros.py" name="detect" output="screen"
+    <node pkg="yolov7_ros" type="detect_ros.py" name="detect" output="screen"
     ns="yolov7">
         <!-- Download the official weights from the original repo -->
-        <param name="weights_path" type="str" value="" />
+        <param name="weights_path" type="str"
+        value="/path/to/weights.pt"/>
+        <!-- Path to a class_labels.txt file containing your desired class labels. The i-th entry corresponds to the i-th class id. For example, in coco class label 0 corresponds to 'person'. Files for the coco and berkeley deep drive datasets are provided in the 'class_labels/' directory. If you leave it empty then no class labels are visualized.-->
+        <param name="classes_path" type="str" value="/path/to/class_labels/your_labels.txt" />
         <!-- topic name to subscribe to -->
         <param name="img_topic" type="str" value="/raw_image" />
         <!-- topic name for the detection output -->
         <param name="out_topic" type="str" value="yolov7" />
         <!-- confidence threshold -->
-        <param name="conf_thresh" type="double" value="0.4" />
+        <param name="conf_thresh" type="double" value="0.35" />
         <!-- intersection over union threshold -->
         <param name="iou_thresh" type="double" value="0.45" />
         <!-- queue size for publishing -->
