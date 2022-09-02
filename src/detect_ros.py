@@ -20,24 +20,6 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 
 
-def rescale(ori_shape: Tuple[int, int], boxes: Union[torch.Tensor, np.ndarray],
-            target_shape: Tuple[int, int]):
-    """Rescale the output to the original image shape
-    :param ori_shape: original width and height [width, height].
-    :param boxes: original bounding boxes as a torch.Tensor or np.array or shape
-        [num_boxes, >=4], where the first 4 entries of each element have to be
-        [x1, y1, x2, y2].
-    :param target_shape: target width and height [width, height].
-    """
-    xscale = target_shape[1] / ori_shape[1]
-    yscale = target_shape[0] / ori_shape[0]
-
-    boxes[:, [0, 2]] *= xscale
-    boxes[:, [1, 3]] *= yscale
-
-    return boxes
-
-
 class YoloV7:
     def __init__(self, weights, conf_thresh: float = 0.5, iou_thresh: float = 0.45,
                  device: str = "cuda"):
@@ -108,6 +90,24 @@ class Yolov7Publisher:
         )
         rospy.loginfo("YOLOv7 initialization complete. Ready to start inference")
 
+    
+    def rescale(self, ori_shape: Tuple[int, int], boxes: Union[torch.Tensor, np.ndarray],
+            target_shape: Tuple[int, int]):
+        """Rescale the output to the original image shape
+        :param ori_shape: original width and height [width, height].
+        :param boxes: original bounding boxes as a torch.Tensor or np.array or shape
+            [num_boxes, >=4], where the first 4 entries of each element have to be
+            [x1, y1, x2, y2].
+        :param target_shape: target width and height [width, height].
+        """
+        xscale = target_shape[1] / ori_shape[1]
+        yscale = target_shape[0] / ori_shape[0]
+
+        boxes[:, [0, 2]] *= xscale
+        boxes[:, [1, 3]] *= yscale
+
+        return boxes
+    
     def process_img_msg(self, img_msg: Image):
         """ callback function for publisher """
         np_img_orig = self.bridge.imgmsg_to_cv2(
@@ -123,13 +123,13 @@ class Yolov7Publisher:
             np_img_orig = np.concatenate([np_img_orig] * 3, axis=2)
             c = 3
 
-        # automatically resize the image to the next smaller possible size
+        # Automatically resize the image to the next smaller possible size
         w_scaled, h_scaled = self.img_size
 
         # w_scaled = w_orig - (w_orig % 8)
         np_img_resized = cv2.resize(np_img_orig, (w_scaled, h_scaled))
 
-        # conversion to torch tensor (copied from original yolov7 repo)
+        #Conversion to torch tensor (copied from original yolov7 repo)
         if np_img_resized.shape[2] == 4: #Removing extra channel if RGBA
             np_img_resized = np_img_resized[:,:,:3]
         img = np_img_resized.transpose((2, 0, 1))[::-1]  # HWC to CHW, BGR to RGB
@@ -139,19 +139,17 @@ class Yolov7Publisher:
         img = img.to(self.device)
         
 
-        # inference & rescaling the output to original img size
+        #Inference & rescaling the output to original img size
         detections = self.model.inference(img)
-        detections[:, :4] = rescale(
+        detections[:, :4] = self.rescale(
             [h_scaled, w_scaled], detections[:, :4], [h_orig, w_orig])
         detections[:, :4] = detections[:, :4].round()
 
-        # publishing
+        #Publishing Detections
         detection_msg = create_stamped_detection_msg(detections, self.class_names)
         self.detection_publisher.publish(detection_msg)
 
-        print(detection_msg)
-
-        # visualizing if required
+        #Publishing Visualization if Required
         if self.visualization_publisher:
             bboxes = [[int(x1), int(y1), int(x2), int(y2)]
                       for x1, y1, x2, y2 in detections[:, :4].tolist()]

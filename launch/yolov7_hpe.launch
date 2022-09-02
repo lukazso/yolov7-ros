@@ -2,11 +2,11 @@
     <node pkg="yolov7_ros" type="detect_pose.py" name="detect" output="screen"  ns="yolov7">
         <!-- Download the official weights from the original repo -->
         <!-- 7 OK, yolov7-w6 OK, 7x too slow,e6e too slow, -->
-        <param name="weights_path" type="str" value="$(find yolov7_ros)/weights/yolov7-w6-pose.pt" />
+        <param name="weights" type="str" value="$(find yolov7_ros)/weights/yolov7-w6-pose.pt" />
         <!-- topic name to subscribe to -->
         <param name="img_topic" type="str" value="/zed2i/zed_node/rgb/image_rect_color" />
         <!-- topic name for the detection output -->
-        <param name="out_topic" type="str" value="yolov7_hpe" />
+        <param name="out_img_topic" type="str" value="yolov7_hpe" />
         <!-- topic name for the detection output -->
         <param name="skeleton_keypoints_out_topic" type="str" value="yolov7_hpe_skeletons" />
         <!-- Output Queue size -->
