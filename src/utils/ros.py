@@ -7,7 +7,7 @@ from std_msgs.msg import Header
 from sensor_msgs.msg import Image
 from vision_msgs.msg import Detection2DArray, Detection2D, BoundingBox2D, \
     ObjectHypothesisWithPose
-from yolov7_ros.msg import ObjectsStamped, Object, BoundingBox2Di, HumansStamped, Human
+from yolov7_ros.msg import ObjectsStamped, Object, BoundingBox2Di, Keypoint2Di, HumansStamped, Human
 from geometry_msgs.msg import Pose2D
 
 
@@ -80,12 +80,17 @@ def create_stamped_detection_msg( detections: torch.Tensor, class_names) -> Obje
     :returns: detections as a ros message of type ObjectsStamped
     """
     detection_array_msg = ObjectsStamped()
+    #print(type(detection_array_msg.objects))
     i = 0
     # header
     header = create_header()
     detection_array_msg.header = header
-    for detection in detections:
+    for  idx, detection in enumerate(detections):
         x1, y1, x2, y2, conf, cls = detection.tolist()
+        x1 = int(x1)
+        y1 = int(y1)
+        x2 = int(x2)
+        y2 = int(y2)
         
         single_detection_msg = Object()
         # bbox
@@ -95,13 +100,15 @@ def create_stamped_detection_msg( detections: torch.Tensor, class_names) -> Obje
         cy = int(round(y1 + h / 2))
 
         bounding_box_2d = BoundingBox2Di()
-        
-        bounding_box_2d.corners[0] = [x1, y1]
-        bounding_box_2d.corners[1] = [x1, y2]
-        bounding_box_2d.corners[2] = [x2, y1]
-        bounding_box_2d.corners[3] = [x2, y2]
-
-        single_detection_msg.bounding_box_2d = bounding_box_2d
+        keypoint =  Keypoint2Di()
+        keypoint.kp =  [x1, y1]
+        bounding_box_2d.corners[0] = keypoint
+        keypoint.kp = [x1, y2]
+        bounding_box_2d.corners[1] = keypoint
+        keypoint.kp =  [x2, y1]
+        bounding_box_2d.corners[2] = keypoint
+        keypoint.kp =  [x2, y2]
+        bounding_box_2d.corners[3] = keypoint
 
         single_detection_msg.center = Pose2D()
         single_detection_msg.center.x = cx
@@ -110,9 +117,14 @@ def create_stamped_detection_msg( detections: torch.Tensor, class_names) -> Obje
         single_detection_msg.label = class_names[int(cls)]
         single_detection_msg.label_id = i
         single_detection_msg.confidence = conf
-
+        
+        single_detection_msg.bounding_box_2d = bounding_box_2d
+        
         detection_array_msg.objects.append(single_detection_msg)
         i = i + 1
+        print(single_detection_msg)
+        #print(detection_array_msg.objects[0].bounding_box_2d.corners)
+    
     return detection_array_msg
 
 

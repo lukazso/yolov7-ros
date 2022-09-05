@@ -1,5 +1,5 @@
 # Standard Header
 std_msgs/Header header
 
-# Array of `object_stamped` topics
+# Array of `objects` topics
 yolov7_ros/Object[] objects
