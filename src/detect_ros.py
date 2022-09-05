@@ -147,7 +147,6 @@ class Yolov7Publisher:
 
         #Publishing Detections
         detection_msg = create_stamped_detection_msg(detections, self.class_names)
-        #print(type(detection_msg))
         self.detection_publisher.publish(detection_msg)
 
         #Publishing Visualization if Required

@@ -100,15 +100,19 @@ def create_stamped_detection_msg( detections: torch.Tensor, class_names) -> Obje
         cy = int(round(y1 + h / 2))
 
         bounding_box_2d = BoundingBox2Di()
-        keypoint =  Keypoint2Di()
-        keypoint.kp =  [x1, y1]
-        bounding_box_2d.corners[0] = keypoint
-        keypoint.kp = [x1, y2]
-        bounding_box_2d.corners[1] = keypoint
-        keypoint.kp =  [x2, y1]
-        bounding_box_2d.corners[2] = keypoint
-        keypoint.kp =  [x2, y2]
-        bounding_box_2d.corners[3] = keypoint
+        keypoint0 =  Keypoint2Di()
+        keypoint1 =  Keypoint2Di()
+        keypoint2 =  Keypoint2Di()
+        keypoint3 =  Keypoint2Di()
+        
+        keypoint0.kp =  [x1, y1]
+        bounding_box_2d.corners[0] = keypoint0
+        keypoint1.kp = [x1, y2]
+        bounding_box_2d.corners[1] = keypoint1
+        keypoint2.kp =  [x2, y1]
+        bounding_box_2d.corners[2] = keypoint2
+        keypoint3.kp =  [x2, y2]
+        bounding_box_2d.corners[3] = keypoint3
 
         single_detection_msg.center = Pose2D()
         single_detection_msg.center.x = cx
@@ -122,8 +126,6 @@ def create_stamped_detection_msg( detections: torch.Tensor, class_names) -> Obje
         
         detection_array_msg.objects.append(single_detection_msg)
         i = i + 1
-        print(single_detection_msg)
-        #print(detection_array_msg.objects[0].bounding_box_2d.corners)
     
     return detection_array_msg
 
