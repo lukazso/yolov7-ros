@@ -11,7 +11,7 @@ string sublabel
 float32 confidence
 
 # 2D Bounding box projected to Camera image
-yolov7_ros/BoundingBox2Di bounding_box_2d
+yolov7_ros/BoundingBox2Df bounding_box_2d
 
 #Detection Center
 geometry_msgs/Pose2D center

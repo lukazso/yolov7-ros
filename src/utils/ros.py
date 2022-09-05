@@ -7,7 +7,7 @@ from std_msgs.msg import Header
 from sensor_msgs.msg import Image
 from vision_msgs.msg import Detection2DArray, Detection2D, BoundingBox2D, \
     ObjectHypothesisWithPose
-from yolov7_ros.msg import ObjectsStamped, Object, BoundingBox2Di, Keypoint2Di, HumansStamped, Human
+from yolov7_ros.msg import ObjectsStamped, Object, BoundingBox2Di, Keypoint2Df, HumansStamped, Human
 from geometry_msgs.msg import Pose2D
 
 
@@ -87,10 +87,6 @@ def create_stamped_detection_msg( detections: torch.Tensor, class_names) -> Obje
     detection_array_msg.header = header
     for  idx, detection in enumerate(detections):
         x1, y1, x2, y2, conf, cls = detection.tolist()
-        x1 = int(x1)
-        y1 = int(y1)
-        x2 = int(x2)
-        y2 = int(y2)
         
         single_detection_msg = Object()
         # bbox
@@ -100,10 +96,10 @@ def create_stamped_detection_msg( detections: torch.Tensor, class_names) -> Obje
         cy = int(round(y1 + h / 2))
 
         bounding_box_2d = BoundingBox2Di()
-        keypoint0 =  Keypoint2Di()
-        keypoint1 =  Keypoint2Di()
-        keypoint2 =  Keypoint2Di()
-        keypoint3 =  Keypoint2Di()
+        keypoint0 =  Keypoint2Df()
+        keypoint1 =  Keypoint2Df()
+        keypoint2 =  Keypoint2Df()
+        keypoint3 =  Keypoint2Df()
         
         keypoint0.kp =  [x1, y1]
         bounding_box_2d.corners[0] = keypoint0
