@@ -1,3 +1,6 @@
 weights/yolov7x.pt
 weights/yolov7-e6e.pt
 weights/yolov7-w6.pt
+
+*.pyc
+
