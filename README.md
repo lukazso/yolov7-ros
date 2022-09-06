@@ -15,11 +15,18 @@ implementation from the paper [YOLOv7: Trainable bag-of-freebies sets new state-
 Following ROS packages are required:
 - [vision_msgs](http://wiki.ros.org/vision_msgs)
 - [geometry_msgs](http://wiki.ros.org/geometry_msgs)
-
+- [shape_msgs](http://wiki.ros.org/shape_msgs)
+- [message_generation](http://wiki.ros.org/message_generation)
+- [actionlib_msgs](http://wiki.ros.org/actionlib_msgs)
+- 
 Yo can install them with:
 ```
 sudo apt-get install ros-noetic-vision-msgs
 sudo apt-get install ros-noetic-geometry-msgs
+sudo apt-get install ros-noetic-shape-msgs
+sudo apt-get install ros-noetic-message-generation
+sudo apt-get install ros-noetic-actionlib-msgs
+
 ```
 First, clone the repo into your catkin workspace and build the package:
 ```
@@ -49,7 +56,7 @@ file also contains a description for each parameter.
 roslaunch yolov7_ros yolov7.launch
 ```
 
-##YOLOv7 Human Pose Estimation
+## YOLOv7 Human Pose Estimation
 Before you launch the node, adjust the parameters in the 
 [launch file](launch/yolov7_hpe.launch). For example, you need to set the path to your 
 YOLOv7 weights and the image topic to which this node should listen to. The launch 
@@ -64,11 +71,9 @@ rosrlaunch yolov7_ros yolov7_hpe.launch
 Each time a new image is received it is then fed into YOLOv7.
 
 ### Notes
-- The detections are published using the [vision_msgs/Detection2DArray](http://docs.ros.org/en/api/vision_msgs/html/msg/Detection2DArray.html) message type.
 - The detections will be published under `/yolov7/out_topic`.
 - If you set the `visualize` parameter to `true`, the detections will be drawn into 
   the image, which is then published under `/yolov7/out_topic/visualization`.
 
 ## Coming Soon
 - ROS2 implementation
-- Additional weights for automotive datasets
