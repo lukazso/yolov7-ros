@@ -18,7 +18,6 @@ Following ROS packages are required:
 - [shape_msgs](http://wiki.ros.org/shape_msgs)
 - [message_generation](http://wiki.ros.org/message_generation)
 - [actionlib_msgs](http://wiki.ros.org/actionlib_msgs)
-- 
 Yo can install them with:
 ```
 sudo apt-get install ros-noetic-vision-msgs
