@@ -1,19 +1,15 @@
 #!/usr/bin/python3
 
+import os, rospy, torch, cv2
 from models.experimental import attempt_load
 from utils.general import non_max_suppression
 from utils.ros import create_detection_msg, create_stamped_detection_msg
 from visualizer import draw_detections
-
-import os
 from utils.ros import load_yaml
 from typing import Tuple, Union
-
-import torch
-import cv2
 from torchvision.transforms import ToTensor
 import numpy as np
-import rospy
+
 
 from yolov7_ros.msg import ObjectsStamped
 from sensor_msgs.msg import Image
@@ -91,8 +87,7 @@ class Yolov7Publisher:
         rospy.loginfo("YOLOv7 initialization complete. Ready to start inference")
 
     
-    def rescale(self, ori_shape: Tuple[int, int], boxes: Union[torch.Tensor, np.ndarray],
-            target_shape: Tuple[int, int]):
+    def rescale(self, ori_shape: Tuple[int, int], boxes: Union[torch.Tensor, np.ndarray],target_shape: Tuple[int, int]):
         """Rescale the output to the original image shape
         :param ori_shape: original width and height [width, height].
         :param boxes: original bounding boxes as a torch.Tensor or np.array or shape
