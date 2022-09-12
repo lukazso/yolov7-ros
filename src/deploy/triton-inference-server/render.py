@@ -49,7 +49,7 @@ def render_filled_box(img, box, color=(200, 200, 200)):
         (int(x1), int(y1)),
         (int(x2), int(y2)),
         color,
-        thickness=cv2.FILLED
+        thickness=1
     )
     return img
 

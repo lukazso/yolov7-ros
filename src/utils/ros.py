@@ -105,9 +105,9 @@ def create_stamped_detection_msg( detections: torch.Tensor, class_names) -> Obje
         bounding_box_2d.corners[0] = keypoint0
         keypoint1.kp = [x1, y2]
         bounding_box_2d.corners[1] = keypoint1
-        keypoint2.kp =  [x2, y1]
+        keypoint2.kp =  [x2, y2]
         bounding_box_2d.corners[2] = keypoint2
-        keypoint3.kp =  [x2, y2]
+        keypoint3.kp =  [x2, y1]
         bounding_box_2d.corners[3] = keypoint3
 
         single_detection_msg.center = Pose2D()

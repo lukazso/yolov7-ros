@@ -16,7 +16,7 @@ def draw_detections(img: np.array, bboxes: List[List[int]], classes: List[int], 
 
         color = get_random_color(int(cls))
         img = cv2.rectangle(
-            img, (int(x1), int(y1)), (int(x2), int(y2)), color, 3
+            img, (int(x1), int(y1)), (int(x2), int(y2)), color, 1
         )
         x_text = int(x1)
         y_text = max(15, int(y1 - 10))
