@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+
+<launch>
+  <include file="$(find yolov7_ros)/launch/yolov7.launch" />
+  <include file="$(find zed_wrapper)/launch/zed2i.launch" />
+</launch>
