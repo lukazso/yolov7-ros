@@ -47,6 +47,9 @@ roslaunch yolov7_ros yolov7.launch
 
 Each time a new image is received it is then fed into YOLOv7.
 
+## Visualization
+You can visualize the yolo results if you set the `visualize` flag in the [launch file](launch/yolov7.launch). Also, with the `classes_path` parameter you can provide a `.txt` file with the class labels. An example file is provided in [berkeley.txt](class_labels/berkeley.txt) or [coco.txt](class_labels/coco.txt).
+
 ### Notes
 - The detections are published using the [vision_msgs/Detection2DArray](http://docs.ros.org/en/api/vision_msgs/html/msg/Detection2DArray.html) message type.
 - The detections will be published under `/yolov7/out_topic`.
