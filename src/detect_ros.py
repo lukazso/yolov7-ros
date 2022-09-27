@@ -121,7 +121,7 @@ class Yolov7Publisher:
         )
         rospy.loginfo("YOLOv7 initialization complete. Ready to start inference")
 
-    def process_img_msg(self, img_msg: Image):q
+    def process_img_msg(self, img_msg: Image):
         """ callback function for publisher """
         np_img_orig = self.bridge.imgmsg_to_cv2(
             img_msg, desired_encoding='passthrough'
