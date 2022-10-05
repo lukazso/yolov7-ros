@@ -124,7 +124,7 @@ class Yolov7Publisher:
     def process_img_msg(self, img_msg: Image):
         """ callback function for publisher """
         np_img_orig = self.bridge.imgmsg_to_cv2(
-            img_msg, desired_encoding='passthrough'
+            img_msg, desired_encoding='bgr8'
         )
 
         # handle possible different img formats
@@ -132,14 +132,9 @@ class Yolov7Publisher:
             np_img_orig = np.stack([np_img_orig] * 3, axis=2)
 
         h_orig, w_orig, c = np_img_orig.shape
-        if c == 1:
-            np_img_orig = np.concatenate([np_img_orig] * 3, axis=2)
-            c = 3
 
         # automatically resize the image to the next smaller possible size
         w_scaled, h_scaled = self.img_size
-
-        # w_scaled = w_orig - (w_orig % 8)
         np_img_resized = cv2.resize(np_img_orig, (w_scaled, h_scaled))
 
         # conversion to torch tensor (copied from original yolov7 repo)
