@@ -4,7 +4,7 @@
         <!-- 7 OK, yolov7-w6 OK, 7x too slow,e6e too slow, -->
         <param name="weights" type="str" value="$(find yolov7_ros)/weights/yolov7-w6-pose.pt" />
         <!-- topic name to subscribe to -->
-        <param name="img_topic" type="str" value="/zed2i/zed_node/rgb/image_rect_color" />
+        <param name="img_topic" type="str" value="/realsense_front/color/image_raw" />
         <!-- topic name for the detection output -->
         <param name="out_img_topic" type="str" value="yolov7_hpe" />
         <!-- topic name for the detection output -->

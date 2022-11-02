@@ -108,7 +108,6 @@ class Yolov7Publisher:
         np_img_orig = self.bridge.imgmsg_to_cv2(
             img_msg, desired_encoding='passthrough'
         )
-
         # handle possible different img formats
         if len(np_img_orig.shape) == 2:
             np_img_orig = np.stack([np_img_orig] * 3, axis=2)
@@ -132,17 +131,17 @@ class Yolov7Publisher:
         img = img.float()  # uint8 to fp16/32
         img /= 255  # 0 - 255 to 0.0 - 1.
         img = img.to(self.device)
-        
 
         #Inference & rescaling the output to original img size
         detections = self.model.inference(img)
         detections[:, :4] = self.rescale(
             [h_scaled, w_scaled], detections[:, :4], [h_orig, w_orig])
         detections[:, :4] = detections[:, :4].round()
-
+        
         #Publishing Detections
-        detection_msg = create_stamped_detection_msg(detections, self.class_names)
-        self.detection_publisher.publish(detection_msg)
+        if(len(detections) > 0):
+            detection_msg = create_stamped_detection_msg(detections, self.class_names)
+            self.detection_publisher.publish(detection_msg)
 
         #Publishing Visualization if Required
         if self.visualization_publisher:

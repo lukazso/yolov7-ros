@@ -5,8 +5,7 @@ from typing import List
 from utils.plots import *
 from std_msgs.msg import Header
 from sensor_msgs.msg import Image
-from vision_msgs.msg import Detection2DArray, Detection2D, BoundingBox2D, \
-    ObjectHypothesisWithPose
+from vision_msgs.msg import Detection2DArray, Detection2D, BoundingBox2D, ObjectHypothesisWithPose
 from yolov7_ros.msg import ObjectsStamped, Object, BoundingBox2Di, Keypoint2Df, HumansStamped, Human
 from geometry_msgs.msg import Pose2D
 
@@ -100,16 +99,20 @@ def create_stamped_detection_msg( detections: torch.Tensor, class_names) -> Obje
         keypoint1 =  Keypoint2Df()
         keypoint2 =  Keypoint2Df()
         keypoint3 =  Keypoint2Df()
-        
-        keypoint0.kp =  [x1, y1]
-        bounding_box_2d.corners[0] = keypoint0
-        keypoint1.kp = [x1, y2]
-        bounding_box_2d.corners[1] = keypoint1
-        keypoint2.kp =  [x2, y2]
-        bounding_box_2d.corners[2] = keypoint2
-        keypoint3.kp =  [x2, y1]
-        bounding_box_2d.corners[3] = keypoint3
 
+        keypoint0.kp[0] =  x1
+        keypoint0.kp[1] =  y1
+        bounding_box_2d.corners[0] = keypoint0
+        keypoint1.kp[0] =  x1
+        keypoint1.kp[1] =  y2
+        bounding_box_2d.corners[1] = keypoint1
+        keypoint2.kp[0] =  x2
+        keypoint2.kp[1] =  y2
+        bounding_box_2d.corners[2] = keypoint2
+        keypoint3.kp[0] =  x2
+        keypoint3.kp[1] =  y1
+        bounding_box_2d.corners[3] = keypoint3
+        
         single_detection_msg.center = Pose2D()
         single_detection_msg.center.x = cx
         single_detection_msg.center.y = cy

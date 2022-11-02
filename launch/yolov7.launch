@@ -4,13 +4,13 @@
         <!-- 7 OK, yolov7-w6 OK, 7x too slow,e6e too slow, -->
         <param name="weights_path" type="str" value="$(find yolov7_ros)/weights/yolov7.pt" />
         <!-- topic name to subscribe to -->
-        <param name="img_topic" type="str" value="/zed2i/zed_node/rgb/image_rect_color" />
+        <param name="img_topic" type="str" value="/realsense_front/color/image_raw" />
         <!-- topic name for the detection output -->
         <param name="out_topic" type="str" value="yolov7_detection" />        
         <!-- confidence threshold -->
-        <param name="conf_thresh" type="double" value="0.5" />
+        <param name="conf_thresh" type="double" value="0.75" />
         <!-- intersection over union threshold -->
-        <param name="iou_thresh" type="double" value="0.6" />
+        <param name="iou_thresh" type="double" value="0.75" />
         <!-- queue size for publishing -->
         <param name="queue_size" type="int" value="1" />
         <!-- image size to which to resize each input image before feeding into the
