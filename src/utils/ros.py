@@ -144,12 +144,17 @@ def create_humans_detection_msg(output) -> HumansStamped:
         num_kpts = len(kpts) // steps 
         for kid in range(num_kpts):
             x_coord, y_coord = kpts[steps * kid], kpts[steps * kid + 1]
+            keypoint =  Keypoint2Df()
             if not (x_coord % 640 == 0 or y_coord % 640 == 0):
                 if steps == 3:
                     conf = kpts[steps * kid + 2]
                     if conf < 0.5:
-                        single_detection_msg.skeleton_2d.keypoints[kid] = [0.0,0.0]
-            single_detection_msg.skeleton_2d.keypoints[kid] = [x_coord,y_coord]
+                        keypoint.kp[0] = 0.0
+                        keypoint.kp[1] = 0.0
+                        single_detection_msg.skeleton_2d.keypoints[kid] = keypoint
+                keypoint.kp[0] = x_coord
+                keypoint.kp[1] = y_coord
+                single_detection_msg.skeleton_2d.keypoints[kid] = keypoint
         keypoints_array_msg.humans.append(single_detection_msg)
         i = i + 1
         
