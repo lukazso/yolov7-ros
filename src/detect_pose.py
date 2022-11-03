@@ -77,7 +77,7 @@ class Yolov7_HPEPublisher:
             plot_skeleton_kpts(nimg, output[idx, 7:].T, 3)
        
         #Publishing Keypoints
-        if (len(keypoints_array_msg) > 0):
+        if (len(output) > 0):
             keypoints_array_msg = create_humans_detection_msg(output)
             self.skeleton_detection_publisher.publish(keypoints_array_msg)
         
