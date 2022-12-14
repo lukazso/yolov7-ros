@@ -53,6 +53,7 @@ class YoloV7:
         self.iou_thresh = iou_thresh
         self.device = device
         self.model = attempt_load(weights, map_location=device)
+        self.model.eval()
 
     @torch.no_grad()
     def inference(self, img: torch.Tensor):
