@@ -53,8 +53,6 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
-  ObjectTracking2D.msg
-  ObjectTracking2DArray.msg
 )
 
 ## Generate services in the 'srv' folder
