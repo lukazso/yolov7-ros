@@ -162,7 +162,7 @@ class Yolov7Publisher:
             classes = [int(c) for c in detections[:, 5].tolist()]
             vis_img = draw_detections(np_img_orig, bboxes, classes,
                                       self.class_labels)
-            vis_msg = self.bridge.cv2_to_imgmsg(vis_img)
+            vis_msg = self.bridge.cv2_to_imgmsg(vis_img,"bgr8")
             self.visualization_publisher.publish(vis_msg)
 
 
