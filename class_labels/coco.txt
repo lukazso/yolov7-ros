@@ -9,7 +9,6 @@ truck
 boat
 traffic light
 fire hydrant
-street sign
 stop sign
 parking meter
 bench
@@ -23,11 +22,8 @@ elephant
 bear
 zebra
 giraffe
-hat
 backpack
 umbrella
-shoe
-eye glasse
 handbag
 tie
 suitcase
@@ -36,13 +32,12 @@ skis
 snowboard
 sports ball
 kite
-baseball
-baseball
+baseball bat
+baseball glove
 skateboard
 surfboard
 tennis racket
 bottle
-plate
 wine glass
 cup
 fork
@@ -55,20 +50,16 @@ sandwich
 orange
 broccoli
 carrot
-hot
+hot dog
 pizza
 donut
 cake
 chair
 couch
-potted
+potted plant
 bed
-mirror
 dining table
-window
-desk
 toilet
-door
 tv
 laptop
 mouse
@@ -80,7 +71,6 @@ oven
 toaster
 sink
 refrigerator
-blender
 book
 clock
 vase
@@ -88,4 +78,3 @@ scissors
 teddy bear
 hair drier
 toothbrush
-hair brush
